@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const http = axios.create({
-  baseURL: "",
+  baseURL: "http://127.0.0.1:8000/api/",
 });
 
 http.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
