@@ -2,18 +2,26 @@
   <div>
     <nav-bar></nav-bar>
     <div class="container mt-container">
-      <div class="mb-3">
-        <label for="question1" class="form-label">Titulo do Formulario:</label>
-        <textarea
-          class="form-control"
-          id="question1"
-          rows="3"
-          v-model="form.question"
-        ></textarea>
+      <div class="card mb-4">
+        <div class="card-header">
+          <div class="d-flex justify-content-between">
+            <h4>Titulo do Formulario</h4>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-text">
+            <textarea
+              class="form-control"
+              id="question1"
+              rows="3"
+              v-model="form.question"
+            ></textarea>
+          </div>
+        </div>
       </div>
       <div
         class="card mb-4"
-        v-for="(item, key) in form.items"
+        v-for="(item, key) in form.items.filter((x) => x.status)"
         :key="'items' + key"
       >
         <div class="card-header">
@@ -33,11 +41,13 @@
             <div class="row">
               <div class="col-9">
                 <div class="mb-3">
-                  <label for="" class="form-label">Pergunta</label>
+                  <label v-bind:for="key + 1 * 2" class="form-label"
+                    >Pergunta</label
+                  >
                   <input
                     type="text"
                     class="form-control"
-                    id=""
+                    v-bind:id="key + 1 * 2"
                     placeholder="Write Answer"
                     v-model="item.name"
                   />
@@ -45,12 +55,14 @@
               </div>
               <div class="col-3">
                 <div class="mb-3">
-                  <label v-bind:for="key" class="form-label">Tipo</label>
+                  <label v-bind:for="key + 1 * 3" class="form-label"
+                    >Tipo</label
+                  >
                   <select
                     class="custom-select"
                     v-model="item.type"
                     aria-label="Default select example"
-                    v-bind:id="key"
+                    v-bind:id="key + 1"
                   >
                     <option value="1">Checkbox</option>
                     <option value="2">Option</option>
@@ -64,7 +76,7 @@
               </div>
               <div
                 class="col-12"
-                v-for="(i, k) in item.answers"
+                v-for="(i, k) in item.answers.filter((x) => x.status)"
                 :key="'answers' + k"
               >
                 <div class="input-group mb-3">
@@ -100,7 +112,7 @@
           </div>
         </div>
       </div>
-      <div class="mb-3 row" v-for="(item, key) in form.items" :key="key"></div>
+      <div class="mb-1 row" v-for="(item, key) in form.items" :key="key"></div>
       <button
         class="btn btn-success"
         v-on:click="addItem"
@@ -128,6 +140,7 @@ export default {
         id: uniqid(),
         question: "",
         items: [],
+        status: true,
       },
     };
   },
@@ -137,16 +150,22 @@ export default {
         id: uniqid(),
         name: "Question 1",
         type: 1,
+        status: true,
         answers: [],
       });
     },
     delItem: function(id) {
-      this.form.items = this.form.items.filter((x) => x.id !== id);
+      this.form.items = this.form.items.map((x) => {
+        if (x.id === id) {
+          x.status = false;
+        }
+        return x;
+      });
     },
     addAnswer: function(id) {
       this.form.items.map((x) => {
         if (id === x.id) {
-          x.answers.push({ id: uniqid(), text: "" });
+          x.answers.push({ id: uniqid(), text: "", status: true });
         }
         return x;
       });
@@ -160,8 +179,15 @@ export default {
       }
     },
     delAnswer: function(id) {
-      this.form.items.map((x) => {
-        x.answers = x.answers.filter((z) => z.id !== id);
+      this.form.items = this.form.items.map((x) => {
+        x.answers = [
+          ...x.answers.map((z) => {
+            if (z.id === id) {
+              z.status = false;
+            }
+            return z;
+          }),
+        ];
         return x;
       });
     },
