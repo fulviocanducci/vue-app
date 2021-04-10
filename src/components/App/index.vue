@@ -1,6 +1,5 @@
 <template>
   <div>
-    <nav-bar></nav-bar>
     <div class="container mt-container">
       <div class="card mb-4">
         <div class="card-header">
@@ -127,13 +126,9 @@
 </template>
 
 <script>
-import navBar from "../NavBar";
 import uniqid from "uniqid";
 export default {
-  name: "app-master",
-  components: {
-    navBar,
-  },
+  name: "app-app",
   data() {
     return {
       form: {
