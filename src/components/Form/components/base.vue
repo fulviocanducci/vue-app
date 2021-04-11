@@ -169,7 +169,7 @@ export default {
       if (this.formId === 0) {
         http.post("form", this.form).then((result) => {
           if (result.status === 201) {
-            this.$router.push("/form");
+            this.$router.push(`/form/update/${result.data.id}`);
           }
         });
       } else if (this.formId > 0) {

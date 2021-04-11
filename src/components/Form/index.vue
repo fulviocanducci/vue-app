@@ -7,21 +7,24 @@
       </button>
     </div>
     <app-loading :status="status"></app-loading>
-    <table class="table table-sm" v-if="items.length > 0">
+    <table class="table" v-if="items.length > 0">
       <thead>
         <tr>
-          <th scope="col">Id</th>
-          <th scope="col">Formulário (Title)</th>
-          <th scope="col">...</th>
+          <th scope="col" class="text-center">Id</th>
+          <th scope="col" class="text-center">Formulário (Title)</th>
+          <th scope="col" class="text-center">...</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in items" :key="index">
           <td class="">{{ item.id }}</td>
           <td class="">{{ item.question }}</td>
-          <td class="">
+          <td class="text-center">
             <button v-on:click="$router.push('/form/update/' + item.id)" class="btn btn-primary" title="Editar formulário">
               <i class="bi bi-pencil"></i>
+            </button>
+            <button v-on:click="deleteItems(item.id)" class="btn btn-danger ml-3" title="Excluir formulário">
+              <i class="bi bi-trash"></i>
             </button>
           </td>
         </tr>
@@ -60,6 +63,18 @@ export default {
         })
         .finally(() => {
           this.status = false;
+        });
+    },
+    deleteItems: function(id) {
+      http
+        .delete(`form/${id}`)
+        .then((response) => {
+          if (response.status === 200) {
+            this.fetchItems();
+          }
+        })
+        .catch((error) => {
+          throw error;
         });
     },
   },
